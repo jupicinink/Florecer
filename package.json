@@ -1,0 +1,40 @@
+{
+  "name": "florecer-landing",
+  "version": "1.0.0",
+  "description": "A responsive web landing page project featuring product carousels.",
+  "main": "src/index.html",
+  "scripts": {
+    "dev": "vite --port 3000",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "postcss": "^8.4.6",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "tailwindcss": "^2.2.19"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "autoprefixer": "^10.4.0",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.8",
+    "vite-plugin-html": "^3.2.2"
+  },
+  "keywords": [
+    "landing page",
+    "responsive",
+    "carousel",
+    "products"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "vite": {
+    "server": {
+      "port": 3000,
+      "strictPort": false
+    }
+  }
+}
