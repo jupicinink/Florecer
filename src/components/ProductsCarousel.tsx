@@ -1,64 +1,45 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
-const IMAGES = [
-  "a.jpg","b.jpg","c.jpg","d.jpg","e.jpg","f.jpg","g.jpg","h.jpg","i.jpg","k.jpg","l.jpg","m.jpg"
+/* Use images from public/img — update names to match public/img folder */
+const SLIDES = [
+  "bouquet-4.jpg",
+  "bouquet-5.jpg",
+  "bouquet-6.jpg",
+  "bouquet-7.jpg",
+  "bouquet-8.jpg"
 ];
+
+const resolveImg = (img: string) => (img.startsWith("/") ? img : `/img/${img}`);
 
 export default function ProductsCarousel() {
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const timer = useRef<number | null>(null);
+  const timeout = useRef<number | null>(null);
 
   useEffect(() => {
-    if (paused) return;
-    timer.current = window.setInterval(() => {
-      setIndex(i => (i + 1) % IMAGES.length);
-    }, 3500);
-    return () => { if (timer.current) window.clearInterval(timer.current); };
-  }, [paused]);
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") next();
-      if (e.key === "ArrowLeft") prev();
+    timeout.current = window.setTimeout(() => setIndex((i) => (i + 1) % SLIDES.length), 5000);
+    return () => {
+      if (timeout.current) window.clearTimeout(timeout.current);
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  function prev() { setIndex(i => (i - 1 + IMAGES.length) % IMAGES.length); }
-  function next() { setIndex(i => (i + 1) % IMAGES.length); }
+  }, [index]);
 
   return (
-    <section
-      className="carousel"
-      aria-roledescription="carousel"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
+    <div className="carousel" role="region" aria-roledescription="carousel" aria-label="Produtos em destaque">
       <div className="carousel-track" style={{ transform: `translateX(-${index * 100}%)` }}>
-        {IMAGES.map((name, i) => (
-          <div className="carousel-item" key={name} aria-hidden={i !== index}>
-            <img src={`/img/${name}`} alt={`Produto ${i + 1}`} loading="lazy" />
+        {SLIDES.map((s, i) => (
+          <div className="carousel-item" key={s}>
+            <img src={resolveImg(s)} alt={`Destaque ${i + 1}`} loading="lazy" />
           </div>
         ))}
       </div>
 
-      <button className="carousel-btn prev" onClick={prev} aria-label="Anterior">‹</button>
-      <button className="carousel-btn next" onClick={next} aria-label="Próximo">›</button>
+      <button className="carousel-btn prev" onClick={() => setIndex((i) => (i - 1 + SLIDES.length) % SLIDES.length)} aria-label="Anterior">‹</button>
+      <button className="carousel-btn next" onClick={() => setIndex((i) => (i + 1) % SLIDES.length)} aria-label="Próximo">›</button>
 
-      <div className="carousel-dots" role="tablist" aria-label="Navegação do carrossel">
-        {IMAGES.map((_, i) => (
-          <button
-            key={i}
-            className={`dot ${i === index ? "active" : ""}`}
-            onClick={() => setIndex(i)}
-            aria-selected={i === index}
-            role="tab"
-            aria-label={`Ir para slide ${i + 1}`}
-          />
+      <div className="carousel-dots" role="tablist" aria-label="Navegar slides">
+        {SLIDES.map((_, i) => (
+          <button key={i} className={`dot ${i === index ? "active" : ""}`} onClick={() => setIndex(i)} aria-label={`Ir para slide ${i + 1}`} />
         ))}
       </div>
-    </section>
+    </div>
   );
 }
